@@ -40,7 +40,7 @@
     <form action="appointment" method="POST">
         <div>${appointment.user.name}</div>
         <input type="hidden" name="userId" value="${appointment.user.userId}" />
-        <input type="hidden" name="userId" value="${appointment.time}" />
+        <input type="hidden" name="time" value="${appointment.time}" />
         <input type="submit" value="Add appointment" />
     </form>
     </c:forEach>
