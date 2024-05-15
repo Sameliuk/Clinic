@@ -1,13 +1,16 @@
-
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Error</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Movie Database</title>
+    <link rel="stylesheet" type="text/css" href="../css/mdb.css">
 </head>
 <body>
-<h1>Error</h1>
-<p>${message}</p>
+<%@include file="../../header.jspf"%>
+<section>
+    <h1>${message}</h1>
+    <a href=".">Go to main page</a>
+</section>
 </body>
 </html>

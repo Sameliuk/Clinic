@@ -12,7 +12,7 @@ class InMemoryDoctorDAO extends InMemoryAbstractDAO<Doctor> implements DoctorDAO
     InMemoryDoctorDAO(InMemoryDatabase database) {
         super(database.doctors, Doctor::getDoctorId, Doctor::setDoctorId, database);
     }
-    private  TreeMap<Integer, Doctor> doctors = new TreeMap<>();
+    private  TreeMap<Integer, Doctor> doctors = (TreeMap) database.doctors;
 
     @Override
     public Doctor findById(Integer id) {

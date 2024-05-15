@@ -15,7 +15,12 @@ public interface DoctorService {
 
     void create(Doctor doctor);
 
-    void addSchedule(Integer id, Schedule schedule);
+    void addSchedule(Integer doctorId, String time);
+
+    void updateSchedule(Integer doctorId, Integer timeId, String time);
+
+    void deleteSchedule(Integer doctorId, Integer timeId);
+    void getScheduleById(Integer timeId);
 
     void delete(Integer id);
 }

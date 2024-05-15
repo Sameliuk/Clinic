@@ -27,6 +27,7 @@
 </head>
 <body>
 <h1>Doctors</h1>
+
 <table>
     <thead>
     <tr>
@@ -36,12 +37,26 @@
     </tr>
     </thead>
     <tbody>
-    <p><c:out value="${doctors}"/></p>
     <c:forEach var="doctor" items="${doctors}">
         <tr>
             <td><c:out value="${doctor.name}"/></td>
-            <td><c:out value="${doctor.speciality}"/></td>
-            <td><c:out value="${doctor.schedule}"/></td>
+            <td><c:out value="${doctor.specialty}"/></td>
+            <td>
+                <c:forEach var="schedule" items="${doctor.schedules}">
+                    <p><c:out value="${schedule.time}"/></p>
+                    <form action="doctors" method="GET">
+                        <input type="hidden" name="command" value="showEditFormSchedule" />
+                        <input type="hidden" name="timeId" value="${schedule.timeId}" />
+                        <input type="submit" value="Edit" />
+                    </form>
+                    <form action="doctors" method="POST">
+                        <input type="hidden" name="command" value="deleteSchedule" />
+                        <input type="hidden" name="doctorId" value="${schedule.doctorId}" />
+                        <input type="hidden" name="timeId" value="${schedule.timeId}" />
+                        <input type="submit" value="Delete"/>
+                    </form>
+                </c:forEach>
+            </td>
         </tr>
     </c:forEach>
     </tbody>

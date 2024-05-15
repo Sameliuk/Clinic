@@ -7,11 +7,11 @@
     <title>Edit appointment</title>
 </head>
 <body>
-<form action="do/editSchedule" method="POST">
-    <input type="hidden" name="id" value="${schedule.id}" />
+<form action="editSchedule" method="POST">
+    <input type="hidden" name="id" value="${doctor.schedule.timeId}" />
     <input type="hidden" name="command" value="save" />
-    Doctor: <input type="text" name="doctor" value="<c:out value="${schedule.doctor}"/>" /><br>
-    Time:<input type="text" name="time" value="<c:out value="${schedule.time}"/>" /><br>
+    Doctor: <input type="text" name="doctor" value="<c:out value="${doctor.schedule.doctorId}"/>" /><br>
+    Time:<input type="text" name="time" value="<c:out value="${doctor.schedule.time}"/>" /><br>
     <input type="submit" value="Save" />
 </form>
 </body>

@@ -2,6 +2,8 @@ package com.example.clinic.dao.impl.inmemory;
 
 import com.example.clinic.dao.AppointmentDAO;
 import com.example.clinic.model.Appointment;
+import com.example.clinic.model.Doctor;
+import com.example.clinic.model.User;
 
 import java.util.*;
 
@@ -10,45 +12,35 @@ class InMemoryAppointmentDAO extends InMemoryAbstractDAO<Appointment> implements
     InMemoryAppointmentDAO(InMemoryDatabase database) {
         super(database.appointments, Appointment::getAppointmentId, Appointment::setAppointmentId, database);
     }
-    private TreeMap<Integer, Appointment> appointments = new TreeMap<>();
+    private TreeMap<Integer, Appointment> appointments = (TreeMap) database.appointments;
 
 
     @Override
     public Appointment findById(Integer id) {
-        return appointments.get(id);
+        return database.appointments.get(id);
     }
 
     @Override
     public Collection<Appointment> findAll() {
-        return appointments.values();
+        return database.appointments.values();
     }
 
     @Override
-    public void create(Appointment appointment) {
-        int id = appointments.isEmpty() ? 1 : appointments.lastKey() + 1;
-        appointment.setAppointmentId(id);
-        appointments.put(id, appointment);
-    }
+    public void create(User user, Doctor doctor, String time) {
+        Appointment appointment = new Appointment(-1, user, doctor, time);
 
-    @Override
-    public void update(Appointment appointment) {
-        appointments.put(appointment.getAppointmentId(), appointment);
+        this.insert(appointment, true);
+        user.getAppointment().add(appointment);
     }
 
     @Override
     public void delete(Integer id) {
-        appointments.remove(id);
+        database.appointments.remove(id);
     }
 
     @Override
     public Collection<Appointment> findByUserId(Integer userId) {
-        List<Appointment> userAppointments = new ArrayList<>();
-        for (Appointment appointment : appointments.values()) {
-            if (appointment.getUserId().equals(userId)) {
-                userAppointments.add(appointment);
-            }
-        }
-        return userAppointments;
+        return database.users.get(userId).getAppointment();
     }
 
 }

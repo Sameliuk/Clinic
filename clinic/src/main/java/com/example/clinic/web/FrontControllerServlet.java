@@ -4,7 +4,6 @@ import com.example.clinic.model.*;
 import com.example.clinic.services.*;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 import jakarta.servlet.ServletConfig;
@@ -14,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 
 
 @WebServlet(name = "FrontControllerServlet", urlPatterns = {"/do/*"})
@@ -55,13 +55,7 @@ public class FrontControllerServlet extends HttpServlet {
                 case "/createAppointment":
                     createAppointment(request, response);
                     break;
-                case "/saveAppointment":
-                    saveAppointment(request, response);
-                    break;
-                case "/editAppointment":
-                    showEditFormAppointment(request, response);
-                    break;
-                case "/showAppointment":
+                case "/appointment":
                     appointment(request, response);
                     break;
                 case "/deleteSchedule":
@@ -76,12 +70,9 @@ public class FrontControllerServlet extends HttpServlet {
                 case "/editSchedule":
                     showEditFormSchedule(request, response);
                     break;
-                case "/showSchedule":
-                    schedule(request, response);
-
-                    break;
+                case "/":
                 default:
-                    response.sendRedirect(".");
+                    appointment(request, response);
                     break;
             }
         } catch (RuntimeException ex) {
@@ -98,11 +89,8 @@ public class FrontControllerServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             Integer doctorId = Integer.valueOf(request.getParameter("doctorId"));
-            Integer timeId = Integer.valueOf(request.getParameter("timeId"));
-            LocalDateTime time = LocalDateTime.parse(request.getParameter("time"));
-            Schedule schedule = new Schedule (doctorId, timeId, time);
-            scheduleService.addTimes(schedule);
-            doctorService.addSchedule(doctorId, schedule);
+            String  time = request.getParameter("time");
+            doctorService.addSchedule(doctorId, time);
             response.sendRedirect("");
         } catch (Exception e) {
             response.sendError(400);
@@ -111,8 +99,9 @@ public class FrontControllerServlet extends HttpServlet {
     protected void deleteSchedule(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            Integer doctorId = Integer.valueOf(request.getParameter("doctorId"));
             Integer timeId = Integer.valueOf(request.getParameter("timeId"));
-            scheduleService.deleteTimes(timeId);
+            doctorService.deleteSchedule(doctorId, timeId);
             response.sendRedirect("");
         } catch (Exception e) {
             response.sendError(400);
@@ -123,29 +112,19 @@ public class FrontControllerServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             Integer timeId = Integer.valueOf(request.getParameter("timeId"));
-            Schedule schedule = scheduleService.getScheduleById(timeId);
-            request.setAttribute("schedule", schedule);
+            doctorService.getScheduleById(timeId);
             request.getRequestDispatcher("WEB-INF/jsp/editSchedule.jsp").forward(request, response);
         } catch (Exception e) {
             response.sendError(400);
         }
     }
-    protected void schedule(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Integer doctorId = Integer.valueOf(request.getParameter("doctorId"));
-        Collection<Schedule> schedules = scheduleService.findAll(doctorId);
-        request.setAttribute("schedules", schedules);
-        request.getRequestDispatcher("WEB-INF/jsp/schedule.jsp").forward(request, response);
-    }
-
     protected void saveSchedule(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             Integer doctorId = Integer.valueOf(request.getParameter("doctorId"));
             Integer timeId = Integer.valueOf(request.getParameter("timeId"));
-            LocalDateTime time = LocalDateTime.parse(request.getParameter("text"));
-            Schedule schedule = new Schedule (doctorId, timeId, time);
-            scheduleService.updateTimes(schedule);
+            String time = request.getParameter("time");
+            doctorService.updateSchedule(timeId, doctorId, time);
             response.sendRedirect("");
         } catch (Exception e) {
             response.sendError(400);
@@ -154,10 +133,22 @@ public class FrontControllerServlet extends HttpServlet {
     protected void createAppointment(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            LocalDateTime time = LocalDateTime.parse(request.getParameter("text"));
-            Appointment appointment = new Appointment(time);
-            appointmentService.addAppointment(appointment);
-            response.sendRedirect("");
+            User user = (User) request.getSession().getAttribute("user");
+            if (user == null) {
+                error(request, response, "Sorry, you need to log in");
+                return;
+            }
+
+            int doctorId = Integer.parseInt(request.getParameter("doctor"));
+            Doctor doctor = doctorService.findById(doctorId);
+            Collection<Doctor> doctors = doctorService.findAll();
+
+            String time = request.getParameter("time");
+
+            request.setAttribute("doctors", doctors);
+            userService.addAppointment(user, doctor, time);
+            response.sendRedirect("" + user);
+            request.getRequestDispatcher("/WEB-INF/jsp/appointment.jsp").forward(request, response);
         } catch (Exception e) {
             response.sendError(400);
         }
@@ -173,40 +164,25 @@ public class FrontControllerServlet extends HttpServlet {
         }
     }
 
-    protected void showEditFormAppointment(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            Integer appointmentId = Integer.valueOf(request.getParameter("appointmentId"));
-            Appointment appointment = appointmentService.getAppointmentById(appointmentId);
-            request.setAttribute("appointment", appointment);
-            request.getRequestDispatcher("WEB-INF/jsp/editAppointment.jsp").forward(request, response);
-        } catch (Exception e) {
-            response.sendError(400);
-        }
-    }
     protected void appointment(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Integer userId = Integer.valueOf(request.getParameter("user"));
-        Collection<Appointment> appointments = appointmentService.getAppointmentsByUserId(userId);
-        request.setAttribute("appointments", appointments);
-        request.getRequestDispatcher("WEB-INF/jsp/appointment.jsp").forward(request, response);
-    }
-
-    protected void saveAppointment(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            Integer appointmentId = Integer.valueOf(request.getParameter("appointmentId"));
-            Integer userId = Integer.valueOf(request.getParameter("user"));
-            Integer doctorId = Integer.valueOf(request.getParameter("doctor"));
-            LocalDateTime time = LocalDateTime.parse(request.getParameter("text"));
-
-            Appointment appointment = new Appointment(appointmentId, userId , doctorId, time );
-            appointmentService.updateAppointment(appointment);
-            response.sendRedirect("");
-        } catch (Exception e) {
-            response.sendError(400);
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            error(request, response, "Sorry, you need to log in");
+            return;
         }
+        int doctorId = Integer.parseInt(request.getParameter("doctor"));
+        Doctor doctor = doctorService.findById(doctorId);
+        Collection<Doctor> doctors = doctorService.findAll();
+
+        String time = request.getParameter("time");
+
+        request.setAttribute("doctors", doctors);
+        userService.addAppointment(user, doctor, time);
+        response.sendRedirect("" + user);
     }
+
+
     protected void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getSession().invalidate();
 
@@ -224,14 +200,12 @@ public class FrontControllerServlet extends HttpServlet {
         }
 
         request.getSession().setAttribute("user", user);
-        response.sendRedirect(".");
+        response.sendRedirect("appointment");
     }
 
     protected void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
+        request.setAttribute("appointment", appointmentService.getAllAppointments());
+        request.getSession().invalidate();
         response.sendRedirect(".");
     }
 

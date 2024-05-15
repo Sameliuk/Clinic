@@ -2,6 +2,8 @@ package com.example.clinic.dao.impl.inmemory;
 
 
 import com.example.clinic.dao.UserDAO;
+import com.example.clinic.model.Appointment;
+import com.example.clinic.model.Doctor;
 import com.example.clinic.model.User;
 
 import java.util.Collection;
@@ -16,24 +18,6 @@ class InMemoryUserDAO extends InMemoryAbstractDAO<User> implements UserDAO {
     }
 
 
-    private TreeMap<Integer, User> users = new TreeMap<>();
-
-    @Override
-    public void create(User user) {
-        int id = users.isEmpty() ? 1 : users.lastKey() + 1;
-        user.setUserId(id);
-        users.put(id, user);
-    }
-    @Override
-    public User findById(Integer id) {
-        return users.get(id);
-    }
-
-    @Override
-    public Collection<User> findAll() {
-        return users.values();
-    }
-
     @Override
     public User getByLogin(String login) {
         return database.users.values()
@@ -44,8 +28,18 @@ class InMemoryUserDAO extends InMemoryAbstractDAO<User> implements UserDAO {
     }
 
     @Override
-    public void delete(Integer id) {
-        users.remove(id);
+    public User getUserId(Integer id) {
+        return database.users.get(id);
+    }
+
+    @Override
+    public Collection<User> findAll() {
+        return database.users.values();
+    }
+
+    @Override
+    public Collection<Appointment> findAllAppointments(User user) {
+        return database.appointments.values();
     }
 
 }

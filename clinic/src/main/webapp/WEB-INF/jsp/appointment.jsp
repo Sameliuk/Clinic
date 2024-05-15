@@ -1,13 +1,11 @@
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
-<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointment</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,70 +23,39 @@
         th {
             background-color: #f2f2f2;
         }
-        form {
-            margin-bottom: 20px;
-        }
-        input[type="text"], input[type="submit"] {
-            padding: 8px;
-            margin: 5px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        input[type="submit"] {
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-        }
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
     </style>
-</head>
+    <title>Appointments</title>
 <body>
-<h1>Appointments</h1>
-<table>
-    <thead>
-    <tr>
-        <th>Doctor</th>
-        <th>Time</th>
-        <th>Edit</th>
-        <th>Delete</th>
-    </tr>
-    </thead>
-    <tbody>
-    <c:forEach var="appointment" items="${appointments}">
-        <tr>
-            <td><c:out value="${appointment.doctor}"/></td>
-            <td><fmt:formatDate pattern="dd.MM.yyyy HH:mm:ss" value="${appointment.time}" /></td>
-            <td>
-                <form action="do/editAppointment" method="GET">
-                    <input type="hidden" name="command" value="editAppointment" />
-                    <input type="hidden" name="appointmentId" value="${appointment.appointmentId}" />
-                    <input type="submit" value="Edit" />
-                </form>
-            </td>
-            <td>
-                <form action="do/deleteAppointment" method="POST">
-                    <input type="hidden" name="command" value="deleteAppointment" />
-                    <input type="hidden" name="appointmentId" value="${appointment.appointmentId}" />
-                    <input type="submit" value="Delete"/>
-                </form>
-            </td>
-        </tr>
-    </c:forEach>
-    </tbody>
-</table>
+<%@include file="../../header.jspf"%>
+<% if (request.getAttribute("error") != null) { %>
+<p style="color: red;"><%= request.getAttribute("error") %></p>
+<% } %>
 
+<ul>
+    <li><a href="doctors">View Doctors</a></li>
+</ul>
+
+<c:if test="${!empty user}">
+    <c:forEach var="appointment" items="${user.appointment}">
+    <form action="appointment" method="POST">
+        <div>${appointment.user.name}</div>
+        <input type="hidden" name="userId" value="${appointment.user.userId}" />
+        <input type="hidden" name="userId" value="${appointment.time}" />
+        <input type="submit" value="Add appointment" />
+    </form>
+    </c:forEach>
+</c:if>
 <hr>
-<h2>Add Appointment</h2>
-<form action="do/createAppointment" method="POST">
-    <input type="hidden" name="command" value="createAppointment" />
-    <label for="doctor">Doctor:</label>
-    <input type="text" id="doctor" name="doctor" required/><br/>
-    <label for="time">Time:</label>
-    <input type="text" id="time" name="time" placeholder="YYYY-MM-DD HH:MM:SS" required/><br/>
-    <input type="submit" value="Add" />
-</form>
+<c:forEach var="appointment" items="${user.appointment}">
+    <div>
+        <c:out value="${appointment.user.name}"/>
+        <c:out value="${appointment.time}"/>
+    </div>
+    <br>
+</c:forEach>
 </body>
 </html>
+
+
+
+

@@ -4,25 +4,21 @@ import java.time.LocalDateTime;
 
 public class Appointment {
 
-    private Integer userId;
-    private Integer doctorId;
+    private User user;
+    private Doctor doctor;
     private Integer appointmentId;
-    private LocalDateTime time;
+    private String time;
 
 
 
-    public Appointment(Integer appointmentId, int user, int doctor, LocalDateTime time ) {
+    public Appointment(Integer appointmentId, User user, Doctor doctor, String time ) {
         this.appointmentId = appointmentId;
-        this.userId = user;
-        this.doctorId = doctor;
+        this.user = user;
+        this.doctor = doctor;
         this.time = time;
 
     }
 
-    public Appointment(LocalDateTime time) {
-        this.time = time;
-
-    }
 
     public Integer getAppointmentId() {
         return appointmentId;
@@ -32,27 +28,27 @@ public class Appointment {
         this.appointmentId = appointmentId;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer user) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Integer getDoctor() {
-        return doctorId;
+    public Doctor getDoctor() {
+        return doctor;
     }
 
     public void setDoctor(Doctor doctor) {
-        this.doctorId = doctorId;
+        this.doctor = doctor;
     }
 
-    public LocalDateTime getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime startTime) {
+    public void setTime(String time) {
         this.time = time;
     }
 

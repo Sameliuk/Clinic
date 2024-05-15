@@ -29,8 +29,23 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public void addSchedule(Integer id, Schedule schedule) {
-        clinicDAO.getScheduleDAO().addTimes(schedule);
+    public void addSchedule(Integer doctorId, String time) {
+        clinicDAO.getScheduleDAO().addTimes(doctorId, time);
+    }
+
+    @Override
+    public void updateSchedule(Integer doctorId, Integer timeId, String time) {
+        clinicDAO.getScheduleDAO().updateTimes(doctorId, timeId, time);
+    }
+
+    @Override
+    public void deleteSchedule(Integer doctorId, Integer timeId) {
+        clinicDAO.getScheduleDAO().deleteTimes(doctorId, timeId);
+    }
+
+    @Override
+    public void getScheduleById(Integer timeId) {
+        clinicDAO.getScheduleDAO().getScheduleById(timeId);
     }
 
     @Override

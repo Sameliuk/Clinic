@@ -1,6 +1,7 @@
 package com.example.clinic.services;
 
 import com.example.clinic.dao.ClinicDAO;
+import com.example.clinic.model.Doctor;
 import com.example.clinic.model.Schedule;
 
 import java.util.Collection;
@@ -13,13 +14,13 @@ public class ScheduleServiceImpl implements ScheduleService{
         this.clinicDAO = clinicDAO;
     }
     @Override
-    public void addTimes(Schedule schedule) {
-        clinicDAO.getScheduleDAO().addTimes(schedule);
+    public void addTimes(Integer doctorId, String time) {
+        clinicDAO.getScheduleDAO().addTimes(doctorId, time);
     }
 
     @Override
-    public void updateTimes(Schedule schedule) {
-        clinicDAO.getScheduleDAO().updateTimes(schedule);
+    public void updateTimes(Integer doctorId, Integer timeId, String time) {
+        clinicDAO.getScheduleDAO().updateTimes(doctorId, timeId, time);
     }
 
     @Override
@@ -28,8 +29,8 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public void deleteTimes(Integer timeId) {
-        clinicDAO.getScheduleDAO().deleteTimes(timeId);
+    public void deleteTimes(Integer doctorId, Integer timeId) {
+        clinicDAO.getScheduleDAO().deleteTimes(doctorId, timeId);
     }
 
     @Override
