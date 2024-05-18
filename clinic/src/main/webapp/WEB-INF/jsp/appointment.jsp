@@ -65,8 +65,22 @@
 
 <form action="createAppointment" method="POST">
     <input type="hidden" name="user" value="${appointment.user.name}" />
-    Doctor Id:<input type="number" name="doctorId" <c:out value="${doctor.doctorId}"/> /><br/>
-    Time:<input type="text" name="time" value="" /><br/>
+    <label for="doctorId">Doctor:</label>
+    <select name="doctorId" id="doctorId">
+        <option value="">Select Doctor</option>
+        <c:forEach items="${doctors}" var="doctor">
+            <option value="${doctor.doctorId}">${doctor.name}</option>
+        </c:forEach>
+    </select><br/>
+    <label for="time">Time:</label>
+    <select name="time" id="time">
+        <option value="">Select Time</option>
+<c:forEach items="${doctors}" var="doctor">
+        <c:forEach items="${doctor.schedules}" var="schedule">
+            <option value="${schedule.time}">${schedule.time} (${doctor.name})</option>
+        </c:forEach>
+</c:forEach>
+    </select><br/>
     <input type="submit" value="Add" />
 </form>
 </body>
