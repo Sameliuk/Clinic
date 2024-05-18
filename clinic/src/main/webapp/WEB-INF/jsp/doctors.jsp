@@ -74,7 +74,13 @@
 </table>
 <hr>
 <form action="createSchedule" method="POST">
-    Doctor id:<input type="number" name="doctorId" <c:out value="${doctor.doctorId}"/> /><br/>
+    <label for="doctorId">Doctor:</label>
+    <select name="doctorId" id="doctorId">
+        <option value="">Select Doctor</option>
+        <c:forEach items="${doctors}" var="doctor">
+            <option value="${doctor.doctorId}">${doctor.name}</option>
+        </c:forEach>
+    </select><br/>
     Time:<input type="text" name="time" value="" /><br/>
     <input type="submit" value="Add" />
 </form>
