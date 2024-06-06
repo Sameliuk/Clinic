@@ -74,7 +74,7 @@ public class User {
         return hash;
     }
 
-    // Used for HashSet in Movie.likers
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
