@@ -35,14 +35,14 @@ public class InMemoryTestData {
         smith.getSchedules().add(new Schedule(2, 1, "2024-04-18 11:00:00"));
         smith.getSchedules().add(new Schedule(3, 1, "2024-04-18 13:00:00"));
         smith.getSchedules().add(new Schedule(4, 1, "2024-04-18 14:00:00"));
-        johnson.getSchedules().add(new Schedule(5, 2, "2024-04-18 10:00:00"));
-        johnson.getSchedules().add(new Schedule(6, 2, "2024-04-18 11:00:00"));
-        adams.getSchedules().add(new Schedule(7, 3, "2024-04-18 13:00:00"));
-        adams.getSchedules().add(new Schedule(8, 3, "2024-04-18 14:00:00"));
-        white.getSchedules().add(new Schedule(9, 4, "2024-04-18 10:00:00"));
-        white.getSchedules().add(new Schedule(10, 4, "2024-04-18 11:00:00"));
-        brown.getSchedules().add(new Schedule(11, 5, "2024-04-18 13:00:00"));
-        brown.getSchedules().add(new Schedule(12, 5, "2024-04-18 14:00:00"));
+        johnson.getSchedules().add(new Schedule(1, 2, "2024-04-18 10:00:00"));
+        johnson.getSchedules().add(new Schedule(2, 2, "2024-04-18 11:00:00"));
+        adams.getSchedules().add(new Schedule(1, 3, "2024-04-18 13:00:00"));
+        adams.getSchedules().add(new Schedule(2, 3, "2024-04-18 14:00:00"));
+        white.getSchedules().add(new Schedule(1, 4, "2024-04-18 10:00:00"));
+        white.getSchedules().add(new Schedule(2, 4, "2024-04-18 11:00:00"));
+        brown.getSchedules().add(new Schedule(1, 5, "2024-04-18 13:00:00"));
+        brown.getSchedules().add(new Schedule(2, 5, "2024-04-18 14:00:00"));
         doctors.stream()
                 .flatMap(doctor -> doctor.getSchedules().stream())
                 .forEach(schedule -> database.schedules.put(schedule.getTimeId(), schedule));
